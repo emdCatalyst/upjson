@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+      
+        <meta name="author" content="Mahdi Djaber">
+      
+        <meta name="description" content="A json wrapper , useful for a simple db.">
+      
+    
+    <title>classes/upjson_db.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/search.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.4.5/fuse.min.js"></script> -->
+    <script src="scripts/fuse.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles/clean-jsdoc-theme.css">
+    
+    
+    
+<svg aria-hidden="true" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display:none">
+    <defs>
+        <symbol id="copy-icon" viewbox="0 0 488.3 488.3">
+            <g>
+                <path d="M314.25,85.4h-227c-21.3,0-38.6,17.3-38.6,38.6v325.7c0,21.3,17.3,38.6,38.6,38.6h227c21.3,0,38.6-17.3,38.6-38.6V124    C352.75,102.7,335.45,85.4,314.25,85.4z M325.75,449.6c0,6.4-5.2,11.6-11.6,11.6h-227c-6.4,0-11.6-5.2-11.6-11.6V124    c0-6.4,5.2-11.6,11.6-11.6h227c6.4,0,11.6,5.2,11.6,11.6V449.6z"/>
+                <path d="M401.05,0h-227c-21.3,0-38.6,17.3-38.6,38.6c0,7.5,6,13.5,13.5,13.5s13.5-6,13.5-13.5c0-6.4,5.2-11.6,11.6-11.6h227    c6.4,0,11.6,5.2,11.6,11.6v325.7c0,6.4-5.2,11.6-11.6,11.6c-7.5,0-13.5,6-13.5,13.5s6,13.5,13.5,13.5c21.3,0,38.6-17.3,38.6-38.6    V38.6C439.65,17.3,422.35,0,401.05,0z"/>
+            </g>
+        </symbol>
+    </defs>
+</svg>
+
+</head>
+<body>
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html" class="filter"><img src="./assets/upjson_logo.png"></a></h2><div class="search-box"><input type="text" placeholder="Search..." id="search-box" /><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-list-div"><ul><li><a href='https://github.com/ankitskvmdam/clean-jsdoc-theme/' class='' id='' target=''>Github</a></li></ul><h3>Classes</h3><ul><li><a href="IllegalOperation.html">IllegalOperation</a></li><li><a href="InitializingRequired.html">InitializingRequired</a></li><li><a href="InvalidFileFormat.html">InvalidFileFormat</a></li><li><a href="InvalidKey.html">InvalidKey</a></li><li><a href="InvalidValue.html">InvalidValue</a></li><li><a href="NoResultsFound.html">NoResultsFound</a></li><li><a href="UPJSON_DB.html">UPJSON_DB</a><ul class='methods'><li data-type='method'><a href="UPJSON_DB.html#add">add</a></li><li data-type='method'><a href="UPJSON_DB.html#all">all</a></li><li data-type='method'><a href="UPJSON_DB.html#clear">clear</a></li><li data-type='method'><a href="UPJSON_DB.html#count">count</a></li><li data-type='method'><a href="UPJSON_DB.html#delete">delete</a></li><li data-type='method'><a href="UPJSON_DB.html#ensure">ensure</a></li><li data-type='method'><a href="UPJSON_DB.html#filter">filter</a></li><li data-type='method'><a href="UPJSON_DB.html#find">find</a></li><li data-type='method'><a href="UPJSON_DB.html#get">get</a></li><li data-type='method'><a href="UPJSON_DB.html#has">has</a></li><li data-type='method'><a href="UPJSON_DB.html#init">init</a></li><li data-type='method'><a href="UPJSON_DB.html#keys">keys</a></li><li data-type='method'><a href="UPJSON_DB.html#push">push</a></li><li data-type='method'><a href="UPJSON_DB.html#set">set</a></li><li data-type='method'><a href="UPJSON_DB.html#substract">substract</a></li><li data-type='method'><a href="UPJSON_DB.html#values">values</a></li></ul></li></ul></div>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">classes/upjson_db.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+@file Holds the main class , UPJSON
+@author Mahdi Djaber (Mahdios)
+@version 1.0.0
+@copyright Copyright (c) 2020 Copyright Holder All Rights Reserved.
+*/
+// Requiring the path module , used to handle the paths
+const path = require('path');
+// Requiring the typedefs
+const InvalidKey = require('../errors/InvalidKey.js'),
+    InvalidValue = require('../errors/InvalidValue.js'),
+    InvalidFileFormat = require('../errors/InvalidFileFormat.js'),
+    InitializingRequired = require('../errors/InitializingRequired.js'),
+    NoResultsFound = require('../errors/NoResultsFound.js'),
+    IllegalOperation = require('../errors/IllegalOperation.js');
+// Requiring the fs module used to write , read and save changes
+// This module is built-in
+const fs = require('fs');
+
+  /**
+  * The UPJSON class , represents a database . All of it's methods are subject to the file system's errors.
+  @todo Implement a path system to access/edit/write data
+  */
+class UPJSON_DB {
+  /**
+  * Create an UPJSON db
+  @param {string} path - Path to the db
+  @example
+  * const { UPJSON } = require('UPJSON');
+  * const db = new UPJSON('path/to/your/db');
+  * // Creates your db
+  */
+  constructor (path = './data/db.json'){
+    /**
+    * The db's path
+    @readonly
+    @private
+    */
+    this.path = path;
+  }
+
+
+  /**
+  * Initializes the db using the path you've given at the constructor . If the file is not present in that path , it creates one . Runs once in a db's life cycle
+  @returns {boolean} The state of initializing , true if succesful
+  @throws {InvalidFileFormat} An error , if the file is of wrong format
+  */
+  async init(){
+    if(path.extname(this.path) !== '.json') throw new InvalidFileFormat('The file you\'ve specified a path to is of wrong type', {expected: '.json', recieved: path.extname(this.path)});
+    if(!fs.existsSync(this.path)) fs.writeFileSync(this.path, JSON.stringify({}));
+    const data = JSON.parse(fs.readFileSync(this.path));
+    if(!data.initState) {
+      data.initState = true;
+      fs.writeFile(this.path , JSON.stringify(data) , (err) => {
+        if(err) throw err;
+      });
+    }
+    return data.initState;
+  }
+
+
+  /**
+  * Sets data in the database to a key . Overwrites the value if exists
+  @param {string} key - The key to set for
+  @param {any} value - The value to set for
+  @returns {JSON} The new data
+  @throws {(InitializingRequired | InvalidKey | InvalidValue)}
+  @example
+  * // Set an empty array to a key named 'array'
+  * db.set('array', []).catch(e => {console.error(e)});
+  */
+  async set(key , value){
+    // Check if the key is given
+    if(!key) throw new InvalidKey('Key not given.',{expected: 'string', recieved: null});
+    // Check if the value is given
+    if(!value) throw new InvalidValue('Value not given',{expected: 'any', recieved: null});
+    // Checking if the init function was called before trying to proceed
+    if(!this.initState) throw new InitializingRequired('Please Initialize the db to avoid errors.');
+    // Cloning the data to a variable
+    const data = JSON.parse(fs.readFileSync(this.path));
+    // Attaching the key/value to the clone
+    data[key] = value;
+    // Writing to the json
+    fs.writeFile(this.path , JSON.stringify(data) , (err) => {
+      if(err) throw err;
+    });
+    // Return to the user
+    return JSON.stringify(data);
+  }
+
+  /**
+  * Gets a piece of data by its key
+  @param {string} key - The key to get
+  @returns {any} The value of that key
+  @throws {(InitializingRequired | InvalidValue)}
+  @example
+  * // Getting a simple key value
+  * db.get('array').then(r => {console.log(r)}).catch(e => {console.error(e)}); // Expected output : []
+  */
+
+  async get(key){
+    // Check if the key is given
+    if(!key) throw new InvalidKey('Key not given.',{expected: 'string', recieved: null});
+    // Checking if the init function was called before trying to proceed
+    if(!this.initState) throw new InitializingRequired('Please Initialize the db to avoid errors.');
+    // Two variables holding our full data and the search results
+    const data = JSON.parse(fs.readFileSync(this.path));
+    // If the data holds a value by the given key , return it
+    if (data[key]) return data[key];
+    // Else send an error
+    throw new NoResultsFound('No value was found.');
+  }
+
+  /**
+  * Searches for keys in the db based on a function , the non strict version of {@link UPJSON_DB#get get()} . Behaves smillar to the built-in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find Array.prototype.find()}
+  @param {Object} searchOptions - Holds the search options if wanted
+  @param {function} searchOptions.function - A function to apply on every piece of data untill it matches
+  @param {boolean} searchOptions.findAll - Whether to return the full set of search results
+  @returns {(Object[]|Object)} The result / results
+  @throws {(InitializingRequired | NoResultsFound)}
+  @example
+  * // Getting all the keys with the length of 2
+  * db.find({function: e => e.length == 2, findAll: true}).then(r => {console.log(r)}).catch(e => {console.error(e)}); // Expected output : [{key: 'number', value: 2020}]
+  */
+  async find(searchOptions){
+    const data = JSON.parse(fs.readFileSync(this.path)),
+      searchResults = [];
+    if(!this.initState) throw new InitializingRequired('Please Initialize the db to avoid errors.');
+    // Check if searchOptions were of good format
+    if (!searchOptions || typeof searchOptions != 'object' || !searchOptions.function || typeof searchOptions.function != 'function' || typeof searchOptions.findAll != 'boolean') throw new Error('The searchOptions were of wrong format.');
+    // Loop through the data
+    for (let element in data) {
+      // If the search function returns true on a set of data
+      if(searchOptions.function(element)) {
+        // If the user wants the first result , return it
+        if(!searchOptions.findAll) return {key: element, value: data[element]};
+        // If he wants the full search result , push to the searchResults array and continue looping
+        searchResults.push({key: element, value: data[element]});
+      }
+    }
+    // Check if the search results are less then one (no search results) and notify the user
+    if(searchResults.length &lt; 1) throw new NoResultsFound('Nothing passes your tests including your search function.');
+    // Else , just return them
+    return searchResults;
+  }
+
+  /**
+  * Pushes a chunk of data to an array given a key . This uses strict search . If you want the search behaviour , refer to {@link UPJSON_DB#get find()} to retrieve the key
+  @param {string} key - The key to set for
+  @param {(any|array)} value - The value to set for . If its an array , the db performs a {@link https://www.w3schools.com/jsref/jsref_concat_array.asp concat}
+  @returns {JSON} The new data
+  @throws {(InitializingRequired | InvalidKey | InvalidValue | IllegalOperation)}
+  @example
+  * // Remember that array earlier ? We're going to populate it.
+  * db.push('array' , 'apple').catch(e => {console.error(e)}); // Expected output : ['apple']
+  * db.push('array' , ['orange' , 'banana']).catch(e => {console.error(e)}); // Expected output : ['apple' , 'orange' , 'banana']
+  */
+  async push(key , value){
+    // Check if the key is given
+    if(!key) throw new InvalidKey('Key not given.',{expected: 'string', recieved: null});
+    // Check if the value is given
+    if(!value) throw new InvalidValue('Value not given',{expected: 'any', recieved: null});
+    // Checking if the init function was called before trying to proceed
+    if(!this.initState) throw new InitializingRequired('Database not initialized.');
+    // Two variables holding the full data and the cloned data
+    const data = JSON.parse(fs.readFileSync(this.path)),
+      baseArray = data[key];
+    // Checking if the key actually exists
+    if(!baseArray) throw new InvalidKey('Key doesn\'t exist on the db.', {expected: 'any', recieved: null});
+    // Checking if the clone is an array
+    if(!Array.isArray(baseArray)) throw new IllegalOperation('Cannot perform push operation on element of type '+typeof baseArray);
+    // Pushing the value to the clone or concating it
+    if(Array.isArray(value)) {
+      const concatedArray = baseArray.concat(value);
+      return this.set(key , concatedArray)
+      .then(s => {return s})
+      .catch(e => {throw e})
+    } else {
+      baseArray.push(value);
+      return this.set(key , baseArray)
+      .then(s => {return s})
+      .catch(e => {throw e})
+    }
+  }
+
+  /**
+  * Adds an integer value to a value of a given key
+  @param {string} key - The key to use .This uses strict search . If you want the search behaviour , refer to {@link UPJSON_DB#find find()} to retrieve the key
+  @param {(string|number)} [value=1] - The value to add . If the value is of type string , the module tries to parse it and defaults to one if failed
+  @returns {JSON} The new data
+  @throws {(InitializingRequired | InvalidKey | IllegalOperation)}
+  */
+  async add(key , value){
+    // Checking if the init function was called before trying to proceed
+    if(!this.initState) throw new Error('Database not initialized.');
+    // Cloning the key's value to a variable
+    const data = JSON.parse(fs.readFileSync(this.path));
+    // Check if the key is given
+    if(!key) throw new InvalidKey('Key not given.',{expected: 'string', recieved: null});
+    // Check if the type of the data is a number
+    if(typeof data[key] != 'number') throw new IllegalOperation('The data you want to add to is of type '+typeof data+ ' . Only numbers allowed.');
+    // Add a number to the data , the value or 1 (default)
+    data[key] = data[key] + (parseInt(value) ? parseInt(value) : 1);
+    // Write to the db
+    fs.writeFile(this.path , JSON.stringify(data) , (err) => {
+      if(err) throw err;
+    });
+    // Return to the user
+    return data;
+  }
+  /**
+  * Substracts an integer value to a value of a given key
+  @param {string} key - The key to use .This uses strict search . If you want the search behaviour , refer to {@link UPJSON_DB#get get()} to retrieve the key
+  @param {(string|number)} [value=1] - The value to substract . If the value is of type string , the module tries to parse it and defaults to one if failed
+  @returns {JSON} The new data
+  @throws {(InitializingRequired | InvalidKey | IllegalOperation)}
+  */
+  async substract(key , value){
+    // Checking if the init function was called before trying to proceed
+    if(!this.initState) throw new InitializingRequired('Please Initialize the db to avoid errors.');
+    // Cloning the key's value to a variable
+    const data = JSON.parse(fs.readFileSync(this.path));
+    // Check if the key is given
+    if(!key) throw new InvalidKey('Key not given.',{expected: 'string', recieved: null});
+    // Check if the type of the data is a number
+    if(typeof data[key] != 'number') throw new IllegalOperation('The data you want to substract to is of type '+typeof data+ ' . Only numbers allowed.');
+    // Substract a number to the data , the value or 1 (default)
+    data[key] = data[key] + (parseInt(value) ? parseInt(value) : 1);
+    // Write to the db
+    fs.writeFile(this.path , JSON.stringify(data) , (err) => {
+      if(err) throw err;
+    });
+    // Return to the user
+    return data;
+  }
+
+  /**
+  * Deletes a key's value from the db . This is IRREVERSIBLE!
+  @param {string} key - The key to delete its value
+  @returns {JSON} New data
+  @throws {(InitializingRequired|InvalidKey|InvalidValue)}
+  */
+  async delete(key){
+    // Checking if the init function was called before trying to proceed
+    if(!this.initState) throw new InitializingRequired('Please Initialize the db to avoid errors.');
+    // Cloning the data into a variable
+    const data = JSON.parse(fs.readFileSync(this.path));
+    // Checking if the key is given
+    if(!key) throw new InvalidKey('Key not given.',{expected: 'string', recieved: null});
+    // Checking if the key exists
+    if(!data[key]) throw new InvalidKey('Key does not exist.',{expected: 'string', recieved: null});
+    // Deleting the key's value from the clone
+    delete data[key];
+    // Reseting the data
+    fs.writeFile(this.path , JSON.stringify(data) , (err) => {
+      if(err) throw err;
+    });
+    // Return to the user
+    return data;
+  }
+
+  /**
+  * Clears the database entirely . This is IRREVERSIBLE!
+  @returns {boolean} Always true , meaning the db was completely cleared
+  @throws {InitializingRequired}
+  **/
+  async clear(){
+    // Checking if the init function was called before trying to proceed
+    if(!this.initState) throw new InitializingRequired('Please Initialize the db to avoid errors.');
+    // Write an empty object to the db
+    fs.writeFile(this.path , JSON.stringify({}) , (err) => {
+      if(err) throw err;
+    });
+    // Return to the user
+    return true;
+  }
+
+  /**
+  * Gets all the keys in the db
+  @returns {string[]} The full array of keys
+  @throws {InitializingRequired}
+  */
+  async keys(){
+    // Checking if the init function was called before trying to proceed
+    if(!this.initState) throw new InitializingRequired('Please Initialize the db to avoid errors.');
+    // Cloning the data into a variable
+    const data = JSON.parse(fs.readFileSync(this.path));
+    // Returning the keys
+    return Object.keys(data);
+  }
+
+  /**
+  * Gets all the values in the db
+  @returns {any[]} The full array of values
+  @throws {InitializingRequired}
+  */
+  async values(){
+    // Checking if the init function was called before trying to proceed
+    if(!this.initState) throw new InitializingRequired('Please Initialize the db to avoid errors.');
+    // Cloning the data into a variable
+    const data = JSON.parse(fs.readFileSync(this.path));
+    // Returning the values
+    return Object.keys(data).map(key => data[key]);
+  }
+
+  /**
+  * Gets everything stored in the db . Combines {@link UPJSON_DB#keys keys()} and {@link UPJSON_DB#values values()} . You can also achieve the same result using the {@link UPJSON_DB#find find()} method passing a function that returns a constant of true.
+  @returns {Object[]} The full array of objects , holds the key and the value
+  @throws {InitializingRequired}
+  */
+  async all(){
+    // Checking if the init function was called before trying to proceed
+    if(!this.initState) throw new InitializingRequired('Please Initialize the db to avoid errors.');
+    // Cloning the data into a variable
+    const data = JSON.parse(fs.readFileSync(this.path));
+    // Returning the result
+    return Object.keys(data).map(key => {
+      const all = {};
+      all.key = key;
+      all.value = data[key];
+      return all;
+    });
+  }
+
+  /**
+  * Checks if a key exists in a db
+  @param {string} key - The key to check for
+  @returns {boolean} The existence of the key
+  @throws {(InitializingRequired | InvalidKey)}
+  */
+  async has(key){
+    // Checking if the init function was called before trying to proceed
+    if(!this.initState) throw new InitializingRequired('Please Initialize the db to avoid errors.');
+    // Cloning the data into a variable
+    const data = JSON.parse(fs.readFileSync(this.path));
+    // Checking if the key is given
+    if(!key) throw new InvalidKey('Key not given.',{expected: 'string', recieved: null});
+    // Returning the existence boolean
+    if(data[key]) return true;
+    return false;
+  }
+
+  /**
+  * Ensure that a key exists and has a value in the db . Combines {@link UPJSON_DB#has has()} and {@link UPJSON_DB#set set()}.
+  @param {string} key - The key to check for
+  @param {any} value - The value to set for if the check fails
+  @returns {(boolean|JSON)} True if a key already exists . Otherwhise , return the new data
+  @throws {(InitializingRequired | InvalidKey | InvalidValue)}
+  */
+  async ensure(key, value){
+    // Checking if the value exists and storing it in a variable
+    const state = await this.has(key);
+    // If the key exists , inform the user
+    if(state){
+      return state;
+    }
+    // Else , set it in the db
+    else {
+      if(!value) throw new InvalidValue('The key does not exist but no value was given.', {expected: 'any', recieved: null});
+      return this.set(key, value)
+        .then(s => {
+          return s;
+        })
+        .catch(e => {
+          throw e;
+        })
+    }
+  }
+
+  /**
+  * Filters an array by removing the items that fail that test
+  @param {string} key - The key to edit its value
+  @param {Object=} searchOptions - Contains the search options to use if you chose so . Identical to {@link UPJSON_DB#find find()} searchOptions
+  @param {function} searchOptions.function - A function to apply on every piece of data untill it matches
+  @param {boolean} searchOptions.findAll - Whether to remove the full set of search results
+  @returns {JSON} The new set of data
+  @throws {(InitializingRequired | InvalidKey | InvalidValue | IllegalOperation)}
+  */
+  async filter(key , searchOptions){
+    const data = JSON.parse(fs.readFileSync(this.path)),
+      searchResults = [];
+    if(!this.initState) throw new InitializingRequired('Please Initialize the db to avoid errors.');
+    if(!key) throw new InvalidKey('No key was given');
+    if(!data[key]) throw new InvalidKey('No match to your key was found');
+    if (!searchOptions || typeof searchOptions != 'object' || !searchOptions.function || typeof searchOptions.function != 'function' || typeof searchOptions.findAll != 'boolean') throw new Error('The searchOptions were of wrong format.');
+    data[key] = data[key].filter(searchOptions.function);
+    fs.writeFile(this.path, JSON.stringify(data) , (err) => {
+      if(err) throw err;
+    });
+    return data;
+  }
+
+  /**
+  * Gets the current initializing state
+  */
+  get initState(){
+    return (JSON.parse(fs.readFileSync(this.path))).initState;
+  }
+
+  /**
+  * Get the total number if key/value elements in the db
+  @returns {number} - Total number of key/value elements in the db
+  @throws {InitializingRequired}
+  */
+  async count(){
+    return (Object.keys(JSON.parse(fs.readFileSync(this.path))).length) - 1;
+  }
+}
+
+
+// Exporting the class
+module.exports = UPJSON_DB;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+  
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script>
+var list = [{"title":"IllegalOperation","link":"<a href=\"IllegalOperation.html\">IllegalOperation</a>"},{"title":"InitializingRequired","link":"<a href=\"InitializingRequired.html\">InitializingRequired</a>"},{"title":"InvalidFileFormat","link":"<a href=\"InvalidFileFormat.html\">InvalidFileFormat</a>"},{"title":"InvalidKey","link":"<a href=\"InvalidKey.html\">InvalidKey</a>"},{"title":"InvalidValue","link":"<a href=\"InvalidValue.html\">InvalidValue</a>"},{"title":"NoResultsFound","link":"<a href=\"NoResultsFound.html\">NoResultsFound</a>"},{"title":"UPJSON_DB","link":"<a href=\"UPJSON_DB.html\">UPJSON_DB</a>"},{"title":"UPJSON_DB#add","link":"<a href=\"UPJSON_DB.html#add\">UPJSON_DB &rtrif; add</a>"},{"title":"UPJSON_DB#all","link":"<a href=\"UPJSON_DB.html#all\">UPJSON_DB &rtrif; all</a>"},{"title":"UPJSON_DB#clear","link":"<a href=\"UPJSON_DB.html#clear\">UPJSON_DB &rtrif; clear</a>"},{"title":"UPJSON_DB#count","link":"<a href=\"UPJSON_DB.html#count\">UPJSON_DB &rtrif; count</a>"},{"title":"UPJSON_DB#delete","link":"<a href=\"UPJSON_DB.html#delete\">UPJSON_DB &rtrif; delete</a>"},{"title":"UPJSON_DB#ensure","link":"<a href=\"UPJSON_DB.html#ensure\">UPJSON_DB &rtrif; ensure</a>"},{"title":"UPJSON_DB#filter","link":"<a href=\"UPJSON_DB.html#filter\">UPJSON_DB &rtrif; filter</a>"},{"title":"UPJSON_DB#find","link":"<a href=\"UPJSON_DB.html#find\">UPJSON_DB &rtrif; find</a>"},{"title":"UPJSON_DB#get","link":"<a href=\"UPJSON_DB.html#get\">UPJSON_DB &rtrif; get</a>"},{"title":"UPJSON_DB#has","link":"<a href=\"UPJSON_DB.html#has\">UPJSON_DB &rtrif; has</a>"},{"title":"UPJSON_DB#init","link":"<a href=\"UPJSON_DB.html#init\">UPJSON_DB &rtrif; init</a>"},{"title":"UPJSON_DB#keys","link":"<a href=\"UPJSON_DB.html#keys\">UPJSON_DB &rtrif; keys</a>"},{"title":"UPJSON_DB#push","link":"<a href=\"UPJSON_DB.html#push\">UPJSON_DB &rtrif; push</a>"},{"title":"UPJSON_DB#set","link":"<a href=\"UPJSON_DB.html#set\">UPJSON_DB &rtrif; set</a>"},{"title":"UPJSON_DB#substract","link":"<a href=\"UPJSON_DB.html#substract\">UPJSON_DB &rtrif; substract</a>"},{"title":"UPJSON_DB#values","link":"<a href=\"UPJSON_DB.html#values\">UPJSON_DB &rtrif; values</a>"}];
+setupSearch(list)
+</script>
+
+ 
+<script type="text/javascript" src="scripts/misc.js"></script>
+</body>
+</html>
