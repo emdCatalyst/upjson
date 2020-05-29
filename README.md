@@ -1,5 +1,5 @@
 <p align="center">
-   <img src="https://github.com/Mahdios/upjson/blob/master/src/assets/upjson_logo.png?raw=true" alt="Header"><img src="https://nodei.co/npm/upjson.png?downloads=true&downloadRank=true&stars=true">
+   <img src="https://github.com/Mahdios/upjson/blob/master/src/assets/upjson_logo.png?raw=true" alt="Header">
 </p>
 
 <p align="center">
@@ -27,14 +27,19 @@
 ## Getting started
 1- Install the package using npm (`npm i --save-dev upjson`) **OR** clone this repo
 2- Require the package and create your database through the **UPJSON_DB** class
-*Example (uses node.js):*
+
 ```js
+// Example (uses node.js):
 const { UPJSON_DB } = require('upjson');
 
 const db = new UPJSON_DB('your/file/path'); // Don't worry if the file does'nt exist , the init method will fix that
 
-db.init().then(console.log).catch(console.error); // This will create the file if it doesn't exist and make's sure it has the correct format
+db.init().then(console.log).catch(console.error); // This will create the file if it doesn't exist and makes sure it has the correct format
 ```
 3- Consult the [docs](http://upjson.mahdios.gq) and get going.
 ## Copyright
 This work is licensed under the Apache 2.0 license . All rights reserved to their respective owners.
+
+<div align="center">
+ <img src="https://nodei.co/npm/upjson.png?downloads=true&downloadRank=true&stars=true">
+</div>
