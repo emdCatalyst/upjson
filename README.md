@@ -26,6 +26,7 @@
 - Lightweight and flexible
 ## Getting started
 1- Install the package using npm (`npm i --save-dev upjson`) **OR** clone this repo
+
 2- Require the package and create your database through the **UPJSON_DB** class
 
 ```js
