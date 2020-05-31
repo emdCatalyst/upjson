@@ -1,5 +1,5 @@
 <p align="center">
-   <img src="https://github.com/Mahdios/upjson/blob/master/src/assets/upjson_logo.png?raw=true" alt="Header">
+   <img src="https://github.com/Mahdios/upjson/blob/master/src/assets/upjson_logo_dark.png?raw=true" alt="Header">
 </p>
 
 <p align="center">
